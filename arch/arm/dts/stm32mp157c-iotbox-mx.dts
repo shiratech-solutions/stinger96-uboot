@@ -1,0 +1,1089 @@
+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
+/*
+ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
+ * Author: STM32CubeMX code generation for STMicroelectronics.
+ */
+
+/dts-v1/;
+#include "stm32mp157c.dtsi"
+#include "stm32mp157c-m4-srm.dtsi"
+#include "stm32mp157cac-pinctrl.dtsi"
+
+/* USER CODE BEGIN includes */
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/mfd/st,stpmic1.h>
+#include <dt-bindings/rtc/rtc-stm32.h>
+/* USER CODE END includes */
+
+/ {
+	model = "STMicroelectronics STM32MP157C-DK2 STM32CubeMX board";
+	compatible = "st,stm32mp157c-iotbox-mx", "st,stm32mp157";
+
+	memory@c0000000 {
+		reg = <0xc0000000 0x10000000>;
+
+		/* USER CODE BEGIN memory */
+		/* USER CODE END memory */
+	};
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		/* USER CODE BEGIN reserved-memory */
+
+		retram: retram@0x38000000 {
+			compatible = "shared-dma-pool";
+			reg = <0x38000000 0x10000>;
+			no-map;
+		};
+
+		mcuram: mcuram@0x30000000 {
+			compatible = "shared-dma-pool";
+			reg = <0x30000000 0x40000>;
+			no-map;
+		};
+
+		mcuram2: mcuram2@0x10000000 {
+			compatible = "shared-dma-pool";
+			reg = <0x10000000 0x40000>;
+			no-map;
+		};
+
+		vdev0vring0: vdev0vring0@10040000 {
+			compatible = "shared-dma-pool";
+			reg = <0x10040000 0x2000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@10042000 {
+			compatible = "shared-dma-pool";
+			reg = <0x10042000 0x2000>;
+			no-map;
+		};
+
+		vdev0buffer: vdev0buffer@10044000 {
+			compatible = "shared-dma-pool";
+			reg = <0x10044000 0x4000>;
+			no-map;
+		};
+		/* USER CODE END reserved-memory */
+
+		gpu_reserved: gpu@ce000000 {
+			reg = <0xce000000 0x2000000>;
+			no-map;
+		};
+	};
+
+	/* USER CODE BEGIN root */
+	aliases {
+		serial2 = &usart2;
+		serial4 = &uart4;
+		serial7 = &uart7;
+
+		i2c2 = &i2c2;
+		i2c4 = &i2c4;
+		mmc0 = &sdmmc1;
+
+		spi4=&spi4;
+		spi5=&spi5;
+
+	};
+
+	chosen {
+		stdout-path = "serial7:115200n8";
+	};
+
+	sram: sram@10050000 {
+		compatible = "mmio-sram";
+		reg = <0x10050000 0x10000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0 0x10050000 0x10000>;
+
+		dma_pool: dma_pool@0 {
+			reg = <0x0 0x10000>;
+			pool;
+		};
+	};
+
+	sd_switch: fixedregulator@0 {
+		compatible = "regulator-fixed";
+		regulator-name = "sd_switch";
+		regulator-min-microvolt = <2900000>;
+		regulator-max-microvolt = <2900000>;
+		regulator-type = "voltage";
+		regulator-always-on;
+
+		gpio = <&gpioa 8 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-boot-on;
+	};
+
+/*
+	leds {
+		compatible = "gpio-leds";
+		usr-led1 {
+			label = "USER_LED1";
+			gpios = <&gpioh 2 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "heartbeat";
+			default-state = "on";
+		};
+
+		usr-led2 {
+			label = "USER_LED2";
+			gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "default-on";
+			default-state = "on";
+		};
+
+
+		usr-led3 {
+			label = "USER_LED3";
+			gpios = <&gpiof 11 GPIO_ACTIVE_HIGH>;
+			
+			default-state = "on";
+		};
+
+
+		usr-led4 {
+			label = "USER_LED4";
+			gpios = <&gpiof 12 GPIO_ACTIVE_HIGH>;
+			
+			default-state = "on";
+		};
+	};
+*/
+	/*
+	sound {
+		compatible = "audio-graph-card";
+		dais = <&i2s2_port>;
+		label = "Stinger96-I2S2";
+		status = "okay";
+
+		routing =
+			"Playback" , "MCLK",
+			"Capture" , "MCLK",
+			"MICL" , "Mic Bias";
+		
+
+	};
+
+	audio-codec {
+		codec_port: port@0 {
+			codec_endpoint: endpoint {
+				remote-endpoint = <&cpu_endpoint>;
+			};
+		};
+	};
+*/	
+
+	usb_phy_tuning: usb-phy-tuning {
+		st,hs-dc-level = <2>;
+		st,fs-rftime-tuning;
+		st,hs-rftime-reduction;
+		st,hs-current-trim = <15>;
+		st,hs-impedance-trim = <1>;
+		st,squelch-level = <3>;
+		st,hs-rx-offset = <2>;
+		st,no-lsfs-sc;		
+
+		/*st,hs-dc-level = <0x02>;
+		st,no-hs-ftime-ctrl;
+		st,hs-rftime-reduction;
+		st,current-boost = <0x02>;
+		st,no-lsfs-fb-cap;
+		st,hs-current-trim = <0x05>;
+		st,hs-impedance-trim = <0x00>;
+		st,squelch-level = <0x01>;
+		st,hs-tx-staggering;*/		
+
+	};
+
+	/* USER CODE END root */
+
+	clocks {
+		/* USER CODE BEGIN clocks */
+		/* USER CODE END clocks */
+
+		clk_lsi: clk-lsi {
+			clock-frequency = <32000>;
+		};
+
+		clk_hsi: clk-hsi {
+			clock-frequency = <64000000>;
+		};
+
+		clk_lse: clk-lse {
+			clock-frequency = <32768>;
+		};
+
+		clk_hse: clk-hse {
+			clock-frequency = <24000000>;
+		};
+	};
+
+}; /*root*/
+
+&pinctrl {
+	u-boot,dm-pre-reloc;
+	adc_pins_mx: adc_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('C', 0, ANALOG)>, /* ADC1_INP10 */
+					 <STM32_PINMUX('C', 3, ANALOG)>; /* ADC1_INP13 */
+		};
+	};
+	adc_sleep_pins_mx: adc_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('C', 0, ANALOG)>, /* ADC1_INP10 */
+					 <STM32_PINMUX('C', 3, ANALOG)>; /* ADC1_INP13 */
+		};
+	};
+	dfsdm_pins_mx: dfsdm_mx-0 {
+		pins1 {
+			pinmux = <STM32_PINMUX('B', 12, AF6)>; /* DFSDM1_DATIN1 */
+			bias-disable;
+		};
+		pins2 {
+			pinmux = <STM32_PINMUX('B', 13, AF3)>; /* DFSDM1_CKOUT */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+	};
+	dfsdm_sleep_pins_mx: dfsdm_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('B', 12, ANALOG)>, /* DFSDM1_DATIN1 */
+					 <STM32_PINMUX('B', 13, ANALOG)>; /* DFSDM1_CKOUT */
+		};
+	};
+	fmc_pins_mx: fmc_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins1 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('D', 0, AF12)>, /* FMC_D2 */
+					 <STM32_PINMUX('D', 1, AF12)>, /* FMC_D3 */
+					 <STM32_PINMUX('D', 4, AF12)>, /* FMC_NOE */
+					 <STM32_PINMUX('D', 5, AF12)>, /* FMC_NWE */
+					 <STM32_PINMUX('D', 11, AF12)>, /* FMC_CLE */
+					 <STM32_PINMUX('D', 12, AF12)>, /* FMC_ALE */
+					 <STM32_PINMUX('D', 14, AF12)>, /* FMC_D0 */
+					 <STM32_PINMUX('D', 15, AF12)>, /* FMC_D1 */
+					 <STM32_PINMUX('E', 7, AF12)>, /* FMC_D4 */
+					 <STM32_PINMUX('E', 8, AF12)>, /* FMC_D5 */
+					 <STM32_PINMUX('E', 9, AF12)>, /* FMC_D6 */
+					 <STM32_PINMUX('E', 10, AF12)>, /* FMC_D7 */
+					 <STM32_PINMUX('G', 9, AF12)>; /* FMC_NCE */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+		pins2 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('D', 6, AF12)>; /* FMC_NWAIT */
+			bias-pull-up;
+		};
+	};
+	fmc_sleep_pins_mx: fmc_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('D', 0, ANALOG)>, /* FMC_D2 */
+					 <STM32_PINMUX('D', 1, ANALOG)>, /* FMC_D3 */
+					 <STM32_PINMUX('D', 4, ANALOG)>, /* FMC_NOE */
+					 <STM32_PINMUX('D', 5, ANALOG)>, /* FMC_NWE */
+					 <STM32_PINMUX('D', 6, ANALOG)>, /* FMC_NWAIT */
+					 <STM32_PINMUX('D', 11, ANALOG)>, /* FMC_CLE */
+					 <STM32_PINMUX('D', 12, ANALOG)>, /* FMC_ALE */
+					 <STM32_PINMUX('D', 14, ANALOG)>, /* FMC_D0 */
+					 <STM32_PINMUX('D', 15, ANALOG)>, /* FMC_D1 */
+					 <STM32_PINMUX('E', 7, ANALOG)>, /* FMC_D4 */
+					 <STM32_PINMUX('E', 8, ANALOG)>, /* FMC_D5 */
+					 <STM32_PINMUX('E', 9, ANALOG)>, /* FMC_D6 */
+					 <STM32_PINMUX('E', 10, ANALOG)>, /* FMC_D7 */
+					 <STM32_PINMUX('G', 9, ANALOG)>; /* FMC_NCE */
+		};
+	};
+	i2c2_pins_mx: i2c2_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('H', 4, AF4)>, /* I2C2_SCL */
+					 <STM32_PINMUX('H', 5, AF4)>; /* I2C2_SDA */
+			bias-disable;
+			drive-open-drain;
+			slew-rate = <0>;
+		};
+	};
+	i2c2_sleep_pins_mx: i2c2_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('H', 4, ANALOG)>, /* I2C2_SCL */
+					 <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
+		};
+	};
+	sdmmc1_b4_pins_a: sdmmc1-b4-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+				 	 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+					 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
+					 <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+			slew-rate = <1>;
+			drive-push-pull;
+ 			bias-disable;
+		};
+		pins2 {
+			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+			slew-rate = <2>;
+ 			drive-push-pull;
+			bias-disable;
+		};
+	};
+
+	sdmmc1_b4_od_pins_a: sdmmc1-b4-od-0 {
+		pins1 {
+			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+					 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+					 <STM32_PINMUX('C', 11, AF12)>; /* SDMMC1_D3 */
+ 			slew-rate = <1>;
+			drive-push-pull;
+			bias-disable;
+ 		};
+ 		pins2 {
+ 			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+			slew-rate = <2>;
+ 			drive-push-pull;
+			bias-disable;
+		};
+		pins3 {
+			pinmux = <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+			slew-rate = <1>;
+			drive-open-drain;
+			bias-disable;
+		};
+	};
+	sdmmc1_dir_pins_a: sdmmc1-dir-0 {
+		pins1 {
+			pinmux = <STM32_PINMUX('F', 2, AF11)>, /* SDMMC1_D0DIR */
+				 	 <STM32_PINMUX('E', 14, AF11)>, /* SDMMC1_D123DIR */
+				 	 <STM32_PINMUX('B', 9, AF11)>; /* SDMMC1_CDIR */
+ 			slew-rate = <3>;
+			drive-push-pull;
+			bias-pull-up;
+		};
+		pins2{
+			pinmux = <STM32_PINMUX('E', 4, AF8)>; /* SDMMC1_CKIN */
+			bias-pull-up;
+ 		};
+ 	};
+	sdmmc1_b4_sleep_pins_a: sdmmc1-b4-sleep-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('C', 8, ANALOG)>, /* SDMMC1_D0 */
+					 <STM32_PINMUX('C', 9, ANALOG)>, /* SDMMC1_D1 */
+					 <STM32_PINMUX('C', 10, ANALOG)>, /* SDMMC1_D2 */
+					 <STM32_PINMUX('C', 11, ANALOG)>, /* SDMMC1_D3 */
+					 <STM32_PINMUX('C', 12, ANALOG)>, /* SDMMC1_CK */
+					 <STM32_PINMUX('D', 2, ANALOG)>; /* SDMMC1_CMD */
+ 		};
+ 	};
+	sdmmc2_pins_mx: sdmmc2_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins1 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
+					 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+		pins2 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <3>;
+		};
+	};
+	sdmmc2_sleep_pins_mx: sdmmc2_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('B', 14, ANALOG)>, /* SDMMC2_D0 */
+					 <STM32_PINMUX('E', 3, ANALOG)>, /* SDMMC2_CK */
+					 <STM32_PINMUX('G', 6, ANALOG)>; /* SDMMC2_CMD */
+		};
+	};
+	spi4_pins_mx: spi4_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('E', 6, AF5)>, /* SPI4_MOSI */
+					 <STM32_PINMUX('E', 11, AF5)>, /* SPI4_NSS */
+					 <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+					 <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+	};
+	spi4_sleep_pins_mx: spi4_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('E', 6, ANALOG)>, /* SPI4_MOSI */
+					 <STM32_PINMUX('E', 11, ANALOG)>, /* SPI4_NSS */
+					 <STM32_PINMUX('E', 12, ANALOG)>, /* SPI4_SCK */
+					 <STM32_PINMUX('E', 13, ANALOG)>; /* SPI4_MISO */
+		};
+	};
+	spi5_pins_mx: spi5_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('F', 11, AF5)>, /* SPI5_MOSI */
+					 <STM32_PINMUX('H', 6, AF5)>; /* SPI5_SCK */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+	};
+	spi5_sleep_pins_mx: spi5_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('F', 11, ANALOG)>, /* SPI5_MOSI */
+					 <STM32_PINMUX('H', 6, ANALOG)>; /* SPI5_SCK */
+		};
+	};
+	uart4_pins_mx: uart4_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins1 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('A', 15, AF8)>, /* UART4_RTS */
+					 <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+		pins2 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('B', 0, AF8)>, /* UART4_CTS */
+					 <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
+			bias-disable;
+		};
+	};
+	uart4_sleep_pins_mx: uart4_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('A', 15, ANALOG)>, /* UART4_RTS */
+					 <STM32_PINMUX('B', 0, ANALOG)>, /* UART4_CTS */
+					 <STM32_PINMUX('B', 2, ANALOG)>, /* UART4_RX */
+					 <STM32_PINMUX('G', 11, ANALOG)>; /* UART4_TX */
+		};
+	};
+	uart7_pins_mx: uart7_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins1 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
+			bias-disable;
+		};
+		pins2 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+	};
+	uart7_sleep_pins_mx: uart7_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('F', 6, ANALOG)>, /* UART7_RX */
+					 <STM32_PINMUX('F', 7, ANALOG)>; /* UART7_TX */
+		};
+	};
+	uart8_pins_mx: uart8_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins1 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('E', 1, AF8)>, /* UART8_TX */
+					 <STM32_PINMUX('G', 7, AF8)>; /* UART8_RTS */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+		pins2 {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('E', 0, AF8)>, /* UART8_RX */
+					 <STM32_PINMUX('G', 10, AF8)>; /* UART8_CTS */
+			bias-disable;
+		};
+	};
+	uart8_sleep_pins_mx: uart8_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('E', 0, ANALOG)>, /* UART8_RX */
+					 <STM32_PINMUX('E', 1, ANALOG)>, /* UART8_TX */
+					 <STM32_PINMUX('G', 7, ANALOG)>, /* UART8_RTS */
+					 <STM32_PINMUX('G', 10, ANALOG)>; /* UART8_CTS */
+		};
+	};
+	usb_otg_hs_pins_mx: usb_otg_hs_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* USB_OTG_HS_ID */
+		};
+	};
+	usb_otg_hs_sleep_pins_mx: usb_otg_hs_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* USB_OTG_HS_ID */
+		};
+	};
+};
+
+&pinctrl_z {
+	u-boot,dm-pre-reloc;
+	i2c4_pins_z_mx: i2c4_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('Z', 4, AF6)>, /* I2C4_SCL */
+					 <STM32_PINMUX('Z', 5, AF6)>; /* I2C4_SDA */
+			bias-disable;
+			drive-open-drain;
+			slew-rate = <0>;
+		};
+	};
+	i2c4_sleep_pins_z_mx: i2c4_sleep_mx-0 {
+		u-boot,dm-pre-reloc;
+		pins {
+			u-boot,dm-pre-reloc;
+			pinmux = <STM32_PINMUX('Z', 4, ANALOG)>, /* I2C4_SCL */
+					 <STM32_PINMUX('Z', 5, ANALOG)>; /* I2C4_SDA */
+		};
+	};
+};
+
+&m4_rproc{
+	/*Restriction: "memory-region" property is not managed - please to use User-Section if needed*/
+	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
+	mbox-names = "vq0", "vq1", "shutdown";
+	recovery;
+	status = "okay";
+
+	/* USER CODE BEGIN m4_rproc */
+	interrupt-parent = <&exti>;
+	interrupts = <68 1>;
+	interrupt-names = "wdg";
+
+	m4_system_resources {
+		status = "okay";
+	};
+	/* USER CODE END m4_rproc */
+};
+
+&adc{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&adc_pins_mx>;
+	pinctrl-1 = <&adc_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN adc */
+	vdd-supply = <&vdd>;
+	vdda-supply = <&vdd>;
+	vref-supply = <&vdda>;
+	adc1: adc@0 {
+		/*
+		 * Type-C USB_PWR_CC1 & USB_PWR_CC2 on in18 & in19.
+		 * Use at least 5 * RC time, e.g. 5 * (Rp + Rd) * C:
+		 * 5 * (56 + 47kOhms) * 5pF => 2.5us.
+		 * Use arbitrary margin here (e.g. 5µs).
+		 */
+		st,min-sample-time-nsecs = <5000>;
+		/* ANA0, ANA1 */
+		st,adc-channels = <0 1>;
+		status = "okay";
+	};
+	adc2: adc@100 {
+		/* ANA0, ANA1, temp sensor */
+		st,adc-channels = <0 1 12>;
+		/* temperature sensor min sample time */
+		st,min-sample-time-nsecs = <10000>;
+		status = "okay";
+	};
+	temp {
+		status = "okay";
+	};
+	/* USER CODE END adc */
+};
+
+&bsec{
+	status = "okay";
+
+	/* USER CODE BEGIN bsec */
+	/* USER CODE END bsec */
+};
+
+&dfsdm{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&dfsdm_pins_mx>;
+	pinctrl-1 = <&dfsdm_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN dfsdm */
+	/* USER CODE END dfsdm */
+};
+
+&dts{
+	status = "okay";
+
+	/* USER CODE BEGIN dts */
+	/* USER CODE END dts */
+};
+
+&fmc{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&fmc_pins_mx>;
+	pinctrl-1 = <&fmc_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN fmc */
+	#address-cells = <0x01>;
+	#size-cells = <0x00>;
+	
+	nand: nand@0 {
+		reg = <0>;                                      
+		nand-on-flash-bbt;    
+		/*nand-ecc-strength = <8>;                 
+		nand-ecc-step-size = <512>;*/       
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/*
+		partition@0 {
+			label = "nand-boot";
+			reg = <0x0 0x1400000>;
+		};
+
+		partition@1400000 {
+			label = "nand-fs";
+			reg = <0x1400000 0x6400000>;
+		};*/
+
+
+       };
+	/* USER CODE END fmc */
+};
+
+&gpu{
+	status = "okay";
+
+	/* USER CODE BEGIN gpu */
+	contiguous-area = <&gpu_reserved>;
+	/* USER CODE END gpu */
+};
+
+&hsem{
+	status = "okay";
+
+	/* USER CODE BEGIN hsem */
+	/* USER CODE END hsem */
+};
+
+&i2c2{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&i2c2_pins_mx>;
+	pinctrl-1 = <&i2c2_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN i2c2 */
+	/* USER CODE END i2c2 */
+};
+
+&i2c4{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&i2c4_pins_z_mx>;
+	pinctrl-1 = <&i2c4_sleep_pins_z_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN i2c4 */
+	i2c-scl-rising-time-ns = <185>;
+	i2c-scl-falling-time-ns = <20>;
+	/delete-property/dmas;
+	/delete-property/dma-names;
+
+	pmic: stpmic@33 {
+		compatible = "st,stpmic1";
+		reg = <0x33>;
+		interrupts-extended = <&exti_pwr 55 IRQ_TYPE_EDGE_FALLING>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		status = "okay";
+
+		st,main-control-register = <0x04>;
+		st,vin-control-register = <0xc0>;
+		st,usb-control-register = <0x20>;
+
+		regulators {
+			compatible = "st,stpmic1-regulators";
+
+			ldo1-supply = <&v3v3>;
+			ldo2-supply = <&v3v3>;
+			ldo3-supply = <&vdd_ddr>;
+			ldo5-supply = <&v3v3>;
+			ldo6-supply = <&v3v3>;
+			pwr_sw1-supply = <&bst_out>;
+			pwr_sw2-supply = <&bst_out>;
+
+			vddcore: buck1 {
+				regulator-name = "vddcore";
+				regulator-min-microvolt = <1200000>; 
+				regulator-max-microvolt = <1350000>; 
+				regulator-always-on;
+				regulator-initial-mode = <0>;
+				regulator-over-current-protection;
+			};
+
+			vdd_ddr: buck2 {
+				regulator-name = "vdd_ddr";
+				regulator-min-microvolt = <1500000>;
+				regulator-max-microvolt = <1500000>;
+				regulator-always-on;
+				regulator-initial-mode = <0>;
+				regulator-over-current-protection;
+			};
+
+			vdd: buck3 {
+				regulator-name = "vdd";
+				regulator-min-microvolt = <1800000>; 
+				regulator-max-microvolt = <1800000>; 
+				regulator-always-on;
+				st,mask-reset;
+				regulator-initial-mode = <0>;
+				regulator-over-current-protection;
+			};
+
+			v3v3: buck4 {
+				regulator-name = "v3v3";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-always-on;
+				regulator-over-current-protection;
+				regulator-initial-mode = <0>;
+			};
+
+			vdda: ldo1 {	
+				regulator-name = "vdda"; 
+				regulator-min-microvolt = <1800000>; 
+				regulator-max-microvolt = <1800000>; 
+				regulator-always-on;
+				interrupts = <IT_CURLIM_LDO1 0>;
+
+			};
+
+			v2v9: ldo2 {	
+				regulator-name = "v2v9";
+				regulator-min-microvolt = <2900000>;  
+				regulator-max-microvolt = <2900000>; 
+				regulator-always-on;
+				interrupts = <IT_CURLIM_LDO2 0>;
+
+			};
+
+			vtt_ddr: ldo3 {
+				regulator-name = "vtt_ddr";
+				regulator-min-microvolt = <500000>; 
+				regulator-max-microvolt = <750000>; 
+				regulator-always-on;
+				regulator-over-current-protection;
+			};
+
+			vdd_usb: ldo4 {
+				regulator-name = "vdd_usb";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				interrupts = <IT_CURLIM_LDO4 0>;
+			};
+
+			vtt_sd: ldo5 { 
+				regulator-name = "vtt_sd";
+				regulator-min-microvolt = <2900000>;
+				regulator-max-microvolt = <2900000>;
+				interrupts = <IT_CURLIM_LDO5 0>;
+				regulator-boot-on;
+			};
+
+			v1v8: ldo6 { 
+				regulator-name = "v1v8";
+				regulator-min-microvolt = <1800000>; 
+				regulator-max-microvolt = <1800000>; 
+				regulator-always-on;
+				interrupts = <IT_CURLIM_LDO6 0>;
+
+			};
+
+			vref_ddr: vref_ddr {
+				regulator-name = "vref_ddr";
+				regulator-always-on;
+				regulator-over-current-protection;
+			};
+
+			 bst_out: boost {
+				regulator-name = "bst_out";
+				interrupts = <IT_OCP_BOOST 0>;
+			 };
+
+			vbus_otg: pwr_sw1 {
+				regulator-name = "vbus_otg";
+				interrupts = <IT_OCP_OTG 0>;
+				regulator-active-discharge;
+			 };
+
+			 vbus_sw: pwr_sw2 {
+				regulator-name = "vbus_sw";
+				interrupts = <IT_OCP_SWOUT 0>;
+				regulator-active-discharge;
+			 };
+		};
+
+		onkey {
+			compatible = "st,stpmic1-onkey";
+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
+			interrupt-names = "onkey-falling", "onkey-rising";
+			status = "okay";
+		};
+
+		watchdog {
+			compatible = "st,stpmic1-wdt";
+			status = "okay";
+		};
+	};
+	/* USER CODE END i2c4 */
+};
+
+&ipcc{
+	status = "okay";
+
+	/* USER CODE BEGIN ipcc */
+	/* USER CODE END ipcc */
+};
+
+&iwdg2{
+	status = "okay";
+
+	/* USER CODE BEGIN iwdg2 */
+	timeout-sec = <32>;
+	/* USER CODE END iwdg2 */
+};
+
+&pwr{
+	status = "okay";
+
+	/* USER CODE BEGIN pwr */
+	pwr-supply = <&vdd>;
+	/* USER CODE END pwr */
+};
+
+&rcc{
+	u-boot,dm-pre-reloc;
+	status = "okay";
+
+	/* USER CODE BEGIN rcc */
+	/* USER CODE END rcc */
+};
+
+&rng1{
+	status = "okay";
+
+	/* USER CODE BEGIN rng1 */
+	/* USER CODE END rng1 */
+};
+
+&rtc{
+	status = "okay";
+
+	/* USER CODE BEGIN rtc */
+	st,lsco = <RTC_OUT2_RMP>;
+	/* USER CODE END rtc */
+};
+
+&sdmmc1{
+	pinctrl-names = "default", "opendrain", "sleep";
+	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
+	pinctrl-1 = <&sdmmc1_b4_od_pins_a &sdmmc1_dir_pins_a>;
+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a &sdmmc1_dir_sleep_pins_a>;
+ 	status = "okay";
+ 	broken-cd;
+	st,sig-dir;
+ 	st,neg-edge;
+	st,use-ckin;
+	vqmmc-supply = <&sd_switch>;
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-ddr50;
+	sd-uhs-sdr104;
+};
+
+/*
+&sdmmc2{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&sdmmc2_pins_mx>;
+	pinctrl-1 = <&sdmmc2_sleep_pins_mx>;
+	status = "okay";
+
+};*/
+
+/*&spi4 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&spi4_pins_a>;
+	pinctrl-1 = <&spi4_sleep_pins_a>;
+	status = "okay";
+	cs-gpios = <&gpioe 11 0>;
+
+	spidev@0 {
+		compatible = "spidev";
+		spi-max-frequency = <500000>;
+		reg = <0>;
+	};
+};*/
+
+&spi4{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&spi4_pins_mx>;
+	pinctrl-1 = <&spi4_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN spi4 */
+	spidev@4 {
+		compatible = "spidev";
+		spi-max-frequency = <500000>;
+		reg = <0>;
+	};
+	/* USER CODE END spi4 */
+};
+
+&spi5{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&spi5_pins_mx>;
+	pinctrl-1 = <&spi5_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN spi5 */
+	/* USER CODE END spi5 */
+};
+
+&timers6{
+	status = "okay";
+
+	/* USER CODE BEGIN timers6 */
+	/* spare dmas for other usage */
+	/delete-property/dmas;
+	/delete-property/dma-names;
+	timer@5 {
+		status = "okay";
+	};
+	/* USER CODE END timers6 */
+};
+
+&uart4{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&uart4_pins_mx>;
+	pinctrl-1 = <&uart4_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN uart4 */
+	/* USER CODE END uart4 */
+};
+
+&uart7{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&uart7_pins_mx>;
+	pinctrl-1 = <&uart7_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN uart7 */
+	/* USER CODE END uart7 */
+};
+
+&uart8{
+	u-boot,dm-pre-reloc;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&uart8_pins_mx>;
+	pinctrl-1 = <&uart8_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN uart8 */
+	/* USER CODE END uart8 */
+};
+
+&usbh_ehci{
+	status = "okay";
+
+	/* USER CODE BEGIN usbh_ehci */
+	/* USER CODE END usbh_ehci */
+};
+
+&usbh_ohci{
+	status = "okay";
+
+	/* USER CODE BEGIN usbh_ohci */
+	/* USER CODE END usbh_ohci */
+};
+
+&usbotg_hs{
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&usb_otg_hs_pins_mx>;
+	pinctrl-1 = <&usb_otg_hs_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN usbotg_hs */
+	/* USER CODE END usbotg_hs */
+};
+
+&usbphyc{
+	status = "okay";
+
+	/* USER CODE BEGIN usbphyc */
+	/* USER CODE END usbphyc */
+};
+
+&usbphyc_port0{
+	status = "okay";
+
+	/* USER CODE BEGIN usbphyc_port0 */
+	/* USER CODE END usbphyc_port0 */
+};
+
+&usbphyc_port1{
+	status = "okay";
+
+	/* USER CODE BEGIN usbphyc_port1 */
+	/* USER CODE END usbphyc_port1 */
+};
+
+
+/* USER CODE BEGIN addons */
+&m4_rproc {
+memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
+		<&vdev0vring1>, <&vdev0buffer>;
+};
+
+
+&dma1 {
+	sram = <&dma_pool>;
+};
+
+&dma2 {
+	sram = <&dma_pool>;
+};
+
+&usbotg_hs {
+	vbus-supply = <&vbus_otg>;
+};
+
+&usbphyc {
+	vdd3v3-supply = <&vdd_usb>;
+};
+/* USER CODE END addons */
